@@ -1,5 +1,6 @@
 package com.example.berta.tebakalattransportasi;
 
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -17,6 +18,8 @@ public class TebakActivity extends AppCompatActivity {
 
     String jawaban;
 
+    private MediaPlayer player;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,8 +36,10 @@ public class TebakActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (editText_jawabb.getText().toString().equals(jawaban)){
                     Toast.makeText(TebakActivity.this,"Kamu Pintar!",Toast.LENGTH_SHORT).show();
+                    playSound(1);
                 } else {
                     Toast.makeText(TebakActivity.this,"Maaf Kamu Salah!",Toast.LENGTH_SHORT).show();
+                    playSound(2);
                 }
             }
         });
@@ -72,6 +77,40 @@ public class TebakActivity extends AppCompatActivity {
         }
 
     }
+
+    @Override
+    public void onPause() {
+        try{
+            super.onPause();
+            player.pause();
+        }catch (Exception e){
+        }
+    }
+
+
+    private void playSound(int arg) {
+        try {
+            if (player.isPlaying()) {
+                player.stop();
+                player.release();
+            }
+        } catch (Exception e) {
+//            Toast.makeText(this, " Masuk Exception", Toast.LENGTH_LONG).show();
+        }
+        if (arg == 1) {
+
+//            Toast.makeText(this, isPlaying+" Burung Hantu", Toast.LENGTH_LONG).show();
+            player = MediaPlayer.create(this, R.raw.benar);
+
+        } else if (arg == 2) {
+//            Toast.makeText(this, isPlaying+" Gajah", Toast.LENGTH_LONG).show();
+            player = MediaPlayer.create(this, R.raw.salah);
+        }
+
+        player.setLooping(false); // Set looping
+        player.start();
+    }
+
 
     private void setInitalisasi() {
         imageView_tebak = (ImageView)findViewById(R.id.imageView_tebak);
